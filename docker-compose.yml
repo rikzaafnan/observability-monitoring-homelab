@@ -71,30 +71,6 @@ services:
     depends_on:
       - node-exporter
 
-  
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
-    container_name: cadvisor
-    restart: unless-stopped
-    privileged: true
-    ports:
-      - "8081:8080"
-    command:
-      - --docker_only=true
-      - --store_container_labels=true
-      - --whitelisted_container_labels=com.docker.compose.service,com.docker.compose.project
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      - /dev/disk:/dev/disk:ro
-    devices:
-      - /dev/kmsg:/dev/kmsg
-    networks:
-      - monitoring
-
 
 networks:
   monitoring:
