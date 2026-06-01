@@ -20,15 +20,6 @@ scrape_configs:
       - source_labels: [__meta_docker_container_log_stream]
         target_label: stream
 
-  - job_name: system
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: system
-          host: home-rick
-          __path__: /var/log/*.log
-
   - job_name: nginx-access
     static_configs:
       - targets:
@@ -46,3 +37,12 @@ scrape_configs:
           job: nginx-error
           host: home-rick
           __path__: /var/log/nginx/error.log
+  
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          host: home-rick
+          __path__: /var/log/*.log
