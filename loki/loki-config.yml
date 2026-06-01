@@ -7,7 +7,7 @@ common:
 
   storage:
     filesystem:
-      chunk_directory: /loki/chunks
+      chunks_directory: /loki/chunks
       rules_directory: /loki/rules
   replication_factor: 1
   ring:
