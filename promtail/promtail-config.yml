@@ -29,11 +29,20 @@ scrape_configs:
           host: home-rick
           __path__: /var/log/*.log
 
-  - job_name: nginx
+  - job_name: nginx-access
     static_configs:
       - targets:
           - localhost
         labels:
-          job: nginx
+          job: nginx-access
           host: home-rick
-          __path__: /var/log/nginx/*.log
+          __path__: /var/log/nginx/access.log
+
+  - job_name: nginx-error
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx-error
+          host: home-rick
+          __path__: /var/log/nginx/error.log
