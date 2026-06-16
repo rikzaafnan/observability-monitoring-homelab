@@ -1,0 +1,47 @@
+groups:
+  - name: homelab-health
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target {{ $labels.job }} di {{ $labels.instance }} down"
+          description: "Prometheus tidak bisa scrape target selama lebih dari 2 menit."
+
+      - alert: HostHighCpuLoad
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU host tinggi di {{ $labels.instance }}"
+          description: "Rata-rata penggunaan CPU lebih dari 85% selama 10 menit."
+
+      - alert: HostHighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memori host tinggi di {{ $labels.instance }}"
+          description: "Penggunaan memori lebih dari 90% selama 10 menit."
+
+      - alert: HostLowDiskSpace
+        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|overlay"})) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk hampir penuh di {{ $labels.instance }}"
+          description: "Filesystem {{ $labels.mountpoint }} memakai lebih dari 85% kapasitas."
+
+      - alert: ContainerRestartingOften
+        expr: changes(container_start_time_seconds{name!=""}[15m]) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container sering restart: {{ $labels.name }}"
+          description: "Container {{ $labels.name }} restart lebih dari 2 kali dalam 15 menit."
