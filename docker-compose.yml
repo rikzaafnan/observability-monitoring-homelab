@@ -29,14 +29,21 @@ services:
     networks:
       - monitoring
     
-  promtail:
-    image: grafana/promtail:3.0.0
-    container_name: promtail
+  alloy:
+    image: grafana/alloy:v1.16.0
+    container_name: alloy
     restart: unless-stopped
     user: "0:0"
-    command: -config.file=/etc/promtail/promtail-config.yml
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+    ports:
+      - "12345:12345"
     volumes:
-      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - ${MONITORING_PATH}/alloy:/var/lib/alloy/data
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
